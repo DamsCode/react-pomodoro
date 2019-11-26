@@ -1,0 +1,32 @@
+{
+  "name": "react-pomodoro",
+  "version": "1.0.0",
+  "description": "pomodoro in react",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DamsCode/react-pomodoro.git"
+  },
+  "author": "damien macors",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DamsCode/react-pomodoro/issues"
+  },
+  "homepage": "https://github.com/DamsCode/react-pomodoro#readme",
+  "dependencies": {
+    "easytimer.js": "^4.0.2",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
+    "@babel/preset-react": "^7.7.4",
+    "parcel-bundler": "^1.12.4",
+    "sass": "^1.23.7"
+  }
+}
