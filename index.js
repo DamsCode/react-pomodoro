@@ -1,8 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
+
 import './app.scss'
-import Containerchrono from  "./component/Containerchrono"
+import Chronos from "./component/chronos";
 
 
 
-ReactDOM.render(<Containerchrono />, document.getElementById("app"));
+ReactDOM.render(<Chronos />, document.getElementById("app"));
