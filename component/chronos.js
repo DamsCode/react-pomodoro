@@ -7,72 +7,142 @@ class chronos extends React.Component {
         super(props);
         this.state = {
             timer: new Timer(),
+            mode:"Session",
             strtime:`25:00`,
-            duree:25
+            sduree:25,
+            bduree:1,
+            isBreak:false,
+            isPause:false
         };
     }
 
     started(){
+        if (!this.state.isPause){
+            this.state.timer.start({
+                countdown: true,
+                startValues: {minutes: this.state.sduree},
+                callback: () => {
+                    if(this.state.timer.getTimeValues().minutes === 0 && this.state.timer.getTimeValues().seconds === 0){
+                        this.setState({
+                            isBreak:true
+                        });
+                        this.startbeak();
+                    }
+                    this.setState({
+                        strtime: this.state.timer.getTimeValues().toString().substring(3)
+                    })
+                }
+            });
+        }else{
+            this.state.timer.start();
+            this.setState({
+                isPause:false
+            });
+        }
+
+    }
+    startbeak (){
+        this.setState({
+            timer: new Timer(),
+            mode:'break'
+        });
         this.state.timer.start({
             countdown: true,
-            startValues: {minutes: this.state.duree},
-            callback: () => this.setState({
-                strtime:this.state.timer.getTimeValues().toString().substring(3)
-            })
+            startValues: {minutes: this.state.bduree},
+            callback: () => {
+                this.setState({
+                    strtime: this.state.timer.getTimeValues().toString().substring(3)
+                })
+                if(this.state.timer.getTimeValues().minutes === 0 && this.state.timer.getTimeValues().seconds === 0){
+                    this.reset();
+                }
+            }
         });
     }
     reset() {
         this.state.timer.stop();
-        if (this.state.duree <= 10){
+        if (this.state.sduree <= 10){
             this.setState({
-                strtime:`0${this.state.duree}:00`
+                strtime:`0${this.state.sduree}:00`
             });
-        }else
+        }else{
+            console.log('test2');
             this.setState({
-                strtime:`${this.state.duree}:00`
+                strtime:`${this.state.sduree}:00`
             });
+        }
+        this.setState({
+            mode:'Session'
+        });
     }
     paused() {
-        if (this.state.timer.isRunning())
+        if (this.state.timer.isRunning()){
             this.state.timer.pause();
+            this.setState({
+                isPause:true
+            })
+        }
     }
-    increment(){
-        if (!this.state.timer.isRunning())
+    increment(breaking){
+        if (!this.state.timer.isRunning() && !this.state.isPause)
         {
-            if (this.state.duree < 60)
-           {
-               let pdur = this.state.duree+1;
-                this.setState({
-                duree:pdur,
-                strtime:`${pdur}:00`
-                });
-           }else
-               {
-                let pdur = 1;
-                this.setState({
-                    duree:pdur,
-                    strtime:`0${pdur}:00`
-                });
+            if (!breaking){
+                if (this.state.sduree < 60)
+                {
+                    let pdur = this.state.sduree +1;
+                    if(this.state.sduree < 9){
+                        this.setState({
+                            sduree:pdur,
+                            strtime:`0${pdur}:00`
+                        });
+                    }else{
+                        this.setState({
+                            sduree:pdur,
+                            strtime:`${pdur}:00`
+                        });
+                    }
+                }
+            }
+            else{
+                if (this.state.bduree < 60)
+                {
+                    let pdur = this.state.bduree +1;
+                    this.setState({
+                        bduree:pdur,
+                    });
+                }
             }
         }
     }
 
-    decrement(){
-        if (!this.state.timer.isRunning())
+    decrement(breaking){
+        if (!this.state.timer.isRunning() && !this.state.isPause)
         {
-            if (this.state.duree > 1){
-                let pdur = this.state.duree-1;
-                if(this.state.duree <= 10){
+            if (!breaking){
+                if (this.state.sduree > 1){
+                    let pdur = this.state.sduree -1;
+
+                    if(this.state.sduree <= 10){
+                        this.setState({
+                            sduree:pdur,
+                            strtime:`0${pdur}:00`
+                        });
+                    }else{
+                        this.setState({
+                            sduree:pdur,
+                            strtime:`${pdur}:00`
+                        });
+                    }
+                }
+            }else{
+                if(this.state.bduree > 1) {
+                    let pdur = this.state.bduree - 1;
                     this.setState({
-                        duree:pdur,
-                        strtime:`0${pdur}:00`
+                        bduree: pdur,
                     });
-                }else
-                    this.setState({
-                        duree:pdur,
-                        strtime:`${pdur}:00`
-                    });
+                }
             }
+
         }
 
     }
@@ -80,15 +150,21 @@ class chronos extends React.Component {
         return (
             <div >
                 <div>
-                    <button  onClick={()=>this.increment()}>+</button>
+                    <button  onClick={()=>this.increment(true)}>+</button>
                     <p>Break length :</p>
-                    <p>{this.state.duree}</p>
-                    <button  onClick={()=>this.decrement()}>-</button>
+                    <p>{this.state.bduree}</p>
+                    <button  onClick={()=>this.decrement(true)}>-</button>
                 </div>
                 <div>
-                    <p>Sessions Length :</p>
+                    <button  onClick={()=>this.increment(false)}>+</button>
+                    <p>session length :</p>
+                    <p>{this.state.sduree}</p>
+                    <button  onClick={()=>this.decrement(false)}>-</button>
+                </div>
+                <div>
+                    <p>{this.state.mode} :</p>
                     <div >{this.state.strtime}</div>
-                    <button  onClick={() => this.started()}>start</button>
+                    <button onClick={() => this.started()}>start</button>
                     <button onClick={() => this.paused()}>pause</button>
                     <button onClick={() => this.reset()}>reset</button>
                 </div>

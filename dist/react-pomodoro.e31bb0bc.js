@@ -32847,7 +32847,7 @@ exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
-var _easytimer = _interopRequireDefault(require("easytimer.js"));
+var _easytimer = require("easytimer.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32881,8 +32881,13 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(chronos).call(this, props));
     _this.state = {
-      timer: new _easytimer.default(),
-      strtime: '00:25:00'
+      timer: new _easytimer.Timer(),
+      mode: "Session",
+      strtime: "25:00",
+      sduree: 25,
+      bduree: 1,
+      isBreak: false,
+      isPause: false
     };
     return _this;
   }
@@ -32892,15 +32897,55 @@ function (_React$Component) {
     value: function started() {
       var _this2 = this;
 
+      if (!this.state.isPause) {
+        this.state.timer.start({
+          countdown: true,
+          startValues: {
+            minutes: this.state.sduree
+          },
+          callback: function callback() {
+            if (_this2.state.timer.getTimeValues().minutes === 0 && _this2.state.timer.getTimeValues().seconds === 0) {
+              _this2.setState({
+                isBreak: true
+              });
+
+              _this2.startbeak();
+            }
+
+            _this2.setState({
+              strtime: _this2.state.timer.getTimeValues().toString().substring(3)
+            });
+          }
+        });
+      } else {
+        this.state.timer.start();
+        this.setState({
+          isPause: false
+        });
+      }
+    }
+  }, {
+    key: "startbeak",
+    value: function startbeak() {
+      var _this3 = this;
+
+      this.setState({
+        timer: new _easytimer.Timer(),
+        mode: 'break'
+      });
       this.state.timer.start({
         countdown: true,
         startValues: {
-          minutes: 25
+          minutes: this.state.bduree
         },
         callback: function callback() {
-          return _this2.setState({
-            strtime: _this2.state.timer.getTimeValues().toString()
+          _this3.setState({
+            strtime: _this3.state.timer.getTimeValues().toString().substring(3)
           });
+
+          if (_this3.state.timer.getTimeValues().minutes === 0 && _this3.state.timer.getTimeValues().seconds === 0) {
+            _this3.reset();
+          }
         }
       });
     }
@@ -32908,33 +32953,128 @@ function (_React$Component) {
     key: "reset",
     value: function reset() {
       this.state.timer.stop();
+
+      if (this.state.sduree <= 10) {
+        this.setState({
+          strtime: "0".concat(this.state.sduree, ":00")
+        });
+      } else {
+        console.log('test2');
+        this.setState({
+          strtime: "".concat(this.state.sduree, ":00")
+        });
+      }
+
       this.setState({
-        strtime: '00:25:00'
+        mode: 'Session'
       });
     }
   }, {
     key: "paused",
     value: function paused() {
-      this.state.timer.pause();
+      if (this.state.timer.isRunning()) {
+        this.state.timer.pause();
+        this.setState({
+          isPause: true
+        });
+      }
+    }
+  }, {
+    key: "increment",
+    value: function increment(breaking) {
+      if (!this.state.timer.isRunning() && !this.state.isPause) {
+        if (!breaking) {
+          if (this.state.sduree < 60) {
+            var pdur = this.state.sduree + 1;
+
+            if (this.state.sduree < 9) {
+              this.setState({
+                sduree: pdur,
+                strtime: "0".concat(pdur, ":00")
+              });
+            } else {
+              this.setState({
+                sduree: pdur,
+                strtime: "".concat(pdur, ":00")
+              });
+            }
+          }
+        } else {
+          if (this.state.bduree < 60) {
+            var _pdur = this.state.bduree + 1;
+
+            this.setState({
+              bduree: _pdur
+            });
+          }
+        }
+      }
+    }
+  }, {
+    key: "decrement",
+    value: function decrement(breaking) {
+      if (!this.state.timer.isRunning() && !this.state.isPause) {
+        if (!breaking) {
+          if (this.state.sduree > 1) {
+            var pdur = this.state.sduree - 1;
+
+            if (this.state.sduree <= 10) {
+              this.setState({
+                sduree: pdur,
+                strtime: "0".concat(pdur, ":00")
+              });
+            } else {
+              this.setState({
+                sduree: pdur,
+                strtime: "".concat(pdur, ":00")
+              });
+            }
+          }
+        } else {
+          if (this.state.bduree > 1) {
+            var _pdur2 = this.state.bduree - 1;
+
+            this.setState({
+              bduree: _pdur2
+            });
+          }
+        }
+      }
     }
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this4 = this;
 
-      return _react.default.createElement("div", null, _react.default.createElement("p", null, this.state.strtime), _react.default.createElement("button", {
+      return _react.default.createElement("div", null, _react.default.createElement("div", null, _react.default.createElement("button", {
         onClick: function onClick() {
-          return _this3.started();
+          return _this4.increment(true);
+        }
+      }, "+"), _react.default.createElement("p", null, "Break length :"), _react.default.createElement("p", null, this.state.bduree), _react.default.createElement("button", {
+        onClick: function onClick() {
+          return _this4.decrement(true);
+        }
+      }, "-")), _react.default.createElement("div", null, _react.default.createElement("button", {
+        onClick: function onClick() {
+          return _this4.increment(false);
+        }
+      }, "+"), _react.default.createElement("p", null, "session length :"), _react.default.createElement("p", null, this.state.sduree), _react.default.createElement("button", {
+        onClick: function onClick() {
+          return _this4.decrement(false);
+        }
+      }, "-")), _react.default.createElement("div", null, _react.default.createElement("p", null, this.state.mode, " :"), _react.default.createElement("div", null, this.state.strtime), _react.default.createElement("button", {
+        onClick: function onClick() {
+          return _this4.started();
         }
       }, "start"), _react.default.createElement("button", {
         onClick: function onClick() {
-          return _this3.paused();
+          return _this4.paused();
         }
       }, "pause"), _react.default.createElement("button", {
         onClick: function onClick() {
-          return _this3.reset();
+          return _this4.reset();
         }
-      }, "reset"));
+      }, "reset")));
     }
   }]);
 
@@ -32943,62 +33083,7 @@ function (_React$Component) {
 
 var _default = chronos;
 exports.default = _default;
-},{"react":"node_modules/react/index.js","easytimer.js":"node_modules/easytimer.js/dist/easytimer.js"}],"component/Containerchrono.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _react = _interopRequireDefault(require("react"));
-
-var _chronos = _interopRequireDefault(require("./chronos"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-var Containerchrono =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(Containerchrono, _React$Component);
-
-  function Containerchrono(props) {
-    _classCallCheck(this, Containerchrono);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(Containerchrono).call(this, props));
-  }
-
-  _createClass(Containerchrono, [{
-    key: "render",
-    value: function render() {
-      return _react.default.createElement(_chronos.default, null);
-    }
-  }]);
-
-  return Containerchrono;
-}(_react.default.Component);
-
-var _default = Containerchrono;
-exports.default = _default;
-},{"react":"node_modules/react/index.js","./chronos":"component/chronos.js"}],"index.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","easytimer.js":"node_modules/easytimer.js/dist/easytimer.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -33007,12 +33092,12 @@ var _reactDom = _interopRequireDefault(require("react-dom"));
 
 require("./app.scss");
 
-var _Containerchrono = _interopRequireDefault(require("./component/Containerchrono"));
+var _chronos = _interopRequireDefault(require("./component/chronos"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_reactDom.default.render(_react.default.createElement(_Containerchrono.default, null), document.getElementById("app"));
-},{"react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","./app.scss":"app.scss","./component/Containerchrono":"component/Containerchrono.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+_reactDom.default.render(_react.default.createElement(_chronos.default, null), document.getElementById("app"));
+},{"react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","./app.scss":"app.scss","./component/chronos":"component/chronos.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -33040,7 +33125,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38847" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "32987" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
