@@ -33046,7 +33046,11 @@ function (_React$Component) {
     value: function render() {
       var _this4 = this;
 
-      return _react.default.createElement("div", null, _react.default.createElement("div", null, _react.default.createElement("button", {
+      return _react.default.createElement("div", {
+        className: "container"
+      }, _react.default.createElement("div", {
+        className: "test"
+      }, _react.default.createElement("button", {
         onClick: function onClick() {
           return _this4.increment(true);
         }
@@ -33062,7 +33066,9 @@ function (_React$Component) {
         onClick: function onClick() {
           return _this4.decrement(false);
         }
-      }, "-")), _react.default.createElement("div", null, _react.default.createElement("p", null, this.state.mode, " :"), _react.default.createElement("div", null, this.state.strtime), _react.default.createElement("button", {
+      }, "-")), _react.default.createElement("div", {
+        className: 'col'
+      }, _react.default.createElement("div", null, _react.default.createElement("p", null, this.state.mode, " :"), _react.default.createElement("p", null, this.state.strtime)), _react.default.createElement("div", null, _react.default.createElement("button", {
         onClick: function onClick() {
           return _this4.started();
         }
@@ -33074,7 +33080,7 @@ function (_React$Component) {
         onClick: function onClick() {
           return _this4.reset();
         }
-      }, "reset")));
+      }, "reset"))));
     }
   }]);
 

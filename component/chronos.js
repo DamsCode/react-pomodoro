@@ -148,8 +148,8 @@ class chronos extends React.Component {
     }
     render() {
         return (
-            <div >
-                <div>
+            <div className={"container"}>
+                <div className={"test"}>
                     <button  onClick={()=>this.increment(true)}>+</button>
                     <p>Break length :</p>
                     <p>{this.state.bduree}</p>
@@ -161,12 +161,16 @@ class chronos extends React.Component {
                     <p>{this.state.sduree}</p>
                     <button  onClick={()=>this.decrement(false)}>-</button>
                 </div>
-                <div>
-                    <p>{this.state.mode} :</p>
-                    <div >{this.state.strtime}</div>
-                    <button onClick={() => this.started()}>start</button>
-                    <button onClick={() => this.paused()}>pause</button>
-                    <button onClick={() => this.reset()}>reset</button>
+                <div className={'col'}>
+                    <div>
+                        <p>{this.state.mode} :</p>
+                        <p>{this.state.strtime}</p>
+                    </div>
+                    <div>
+                        <button onClick={() => this.started()}>start</button>
+                        <button onClick={() => this.paused()}>pause</button>
+                        <button onClick={() => this.reset()}>reset</button>
+                    </div>
                 </div>
             </div>
         );
