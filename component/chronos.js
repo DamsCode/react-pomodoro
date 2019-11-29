@@ -30,12 +30,12 @@ class chronos extends React.Component {
                         });
                         this.startbeak();
                     }
-                    this.setState({
-                        strtime: this.state.timer
+                    this.setState(state => ({
+                        strtime: state.timer
                             .getTimeValues()
                             .toString()
                             .substring(3),
-                    });
+                    }));
                 },
             });
         } else {
@@ -54,12 +54,12 @@ class chronos extends React.Component {
             countdown: true,
             startValues: {minutes: this.state.bduree},
             callback: () => {
-                this.setState({
-                    strtime: this.state.timer
+                this.setState(state => ({
+                    strtime: state.timer
                         .getTimeValues()
                         .toString()
                         .substring(3),
-                });
+                }));
                 if (
                     this.state.timer.getTimeValues().minutes === 0 &&
                     this.state.timer.getTimeValues().seconds === 0
@@ -72,13 +72,13 @@ class chronos extends React.Component {
     reset() {
         this.state.timer.stop();
         if (this.state.sduree <= 10) {
-            this.setState({
-                strtime: `0${this.state.sduree}:00`,
-            });
+            this.setState(state => ({
+                strtime: `0${state.sduree}:00`,
+            }));
         } else {
-            this.setState({
-                strtime: `${this.state.sduree}:00`,
-            });
+            this.setState(state => ({
+                strtime: `${state.sduree}:00`,
+            }));
         }
         this.setState({
             mode: "Session",
@@ -111,10 +111,9 @@ class chronos extends React.Component {
                 }
             } else {
                 if (this.state.bduree < 60) {
-                    const pdur = this.state.bduree + 1;
-                    this.setState({
-                        bduree: pdur,
-                    });
+                    this.setState(state => ({
+                        bduree: state.bduree + 1,
+                    }));
                 }
             }
         }
@@ -140,10 +139,9 @@ class chronos extends React.Component {
                 }
             } else {
                 if (this.state.bduree > 1) {
-                    const pdur = this.state.bduree - 1;
-                    this.setState({
-                        bduree: pdur,
-                    });
+                    this.setState(state => ({
+                        bduree: state.bduree - 1,
+                    }));
                 }
             }
         }
