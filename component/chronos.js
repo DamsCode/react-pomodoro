@@ -189,7 +189,10 @@ class chronos extends React.Component {
                         <p>{this.state.strtime}</p>
                     </div>
                     <div>
-                        <button type={"button"} onClick={() => this.started()}>
+                        <button
+                            className={"hvr-grow-shadow hvr-bounce-in"}
+                            type={"button"}
+                            onClick={() => this.started()}>
                             {"start"}
                         </button>
                         <button type={"button"} onClick={() => this.paused()}>
