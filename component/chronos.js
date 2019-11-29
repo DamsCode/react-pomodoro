@@ -71,6 +71,10 @@ class chronos extends React.Component {
     }
     reset() {
         this.state.timer.stop();
+        this.setState({
+            isBreak: false,
+            isPause: false,
+        });
         if (this.state.sduree <= 10) {
             this.setState(state => ({
                 strtime: `0${state.sduree}:00`,
@@ -149,13 +153,13 @@ class chronos extends React.Component {
     render() {
         return (
             <div className={"container"}>
-                <div className={"test"}>
+                <div id={"blockg"}>
                     <button
                         type={"button"}
                         onClick={() => this.increment(true)}>
                         {"+"}
                     </button>
-                    <p>{"Break length :"}</p>
+                    <p>{"Break  :"}</p>
                     <p>{this.state.bduree}</p>
                     <button
                         type={"button"}
@@ -163,13 +167,13 @@ class chronos extends React.Component {
                         {"-"}
                     </button>
                 </div>
-                <div>
+                <div id={"blockd"}>
                     <button
                         type={"button"}
                         onClick={() => this.increment(false)}>
                         {"+"}
                     </button>
-                    <p>{"session length :"}</p>
+                    <p>{"session :"}</p>
                     <p>{this.state.sduree}</p>
                     <button
                         type={"button"}
@@ -177,7 +181,7 @@ class chronos extends React.Component {
                         {"-"}
                     </button>
                 </div>
-                <div className={"col"}>
+                <div className={"col"} id={"blockclock"}>
                     <div>
                         <p>
                             {this.state.mode} {":"}
