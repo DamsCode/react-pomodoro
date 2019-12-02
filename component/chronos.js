@@ -154,51 +154,51 @@ class chronos extends React.Component {
         return (
             <div className={"container"}>
                 <div id={"blockg"}>
-                    <button
-                        type={"button"}
-                        onClick={() => this.increment(true)}>
-                        {"+"}
-                    </button>
-                    <p>{"Break  :"}</p>
+                    <span
+                        className={"triangleup hvr-bounce-in"}
+                        onClick={() => this.increment(true)}
+                    />
+                    <p className={"between"}>{"Break  :"}</p>
                     <p>{this.state.bduree}</p>
-                    <button
-                        type={"button"}
-                        onClick={() => this.decrement(true)}>
-                        {"-"}
-                    </button>
+                    <span
+                        className={"triangledown hvr-bounce-in"}
+                        onClick={() => this.decrement(true)}
+                    />
                 </div>
                 <div id={"blockd"}>
-                    <button
-                        type={"button"}
-                        onClick={() => this.increment(false)}>
-                        {"+"}
-                    </button>
-                    <p>{"session :"}</p>
+                    <span
+                        className={"triangleup hvr-bounce-in"}
+                        onClick={() => this.increment(false)}
+                    />
+                    <p className={"between"}>{"session :"}</p>
                     <p>{this.state.sduree}</p>
-                    <button
-                        type={"button"}
-                        onClick={() => this.decrement(false)}>
-                        {"-"}
-                    </button>
+                    <span
+                        className={"triangledown hvr-bounce-in"}
+                        onClick={() => this.decrement(false)}
+                    />
                 </div>
                 <div className={"col"} id={"blockclock"}>
                     <div>
-                        <p>
-                            {this.state.mode} {":"}
-                        </p>
+                        <p>{this.state.mode}</p>
                         <p>{this.state.strtime}</p>
                     </div>
                     <div>
                         <button
-                            className={"hvr-grow-shadow hvr-bounce-in"}
+                            className={"hvr-border-fade"}
                             type={"button"}
                             onClick={() => this.started()}>
                             {"start"}
                         </button>
-                        <button type={"button"} onClick={() => this.paused()}>
+                        <button
+                            className={"hvr-border-fade"}
+                            type={"button"}
+                            onClick={() => this.paused()}>
                             {"pause"}
                         </button>
-                        <button type={"button"} onClick={() => this.reset()}>
+                        <button
+                            className={"hvr-border-fade"}
+                            type={"button"}
+                            onClick={() => this.reset()}>
                             {"reset"}
                         </button>
                     </div>
